@@ -69,6 +69,28 @@ img { max-width: 100%; display: block; }
   filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));
 }
 
+/* Water ripple where the anchor lands */
+.intro-ripple {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  width: 30px;
+  height: 12px;
+  transform: translateX(-50%);
+  border: 2px solid var(--greyish-cyan);
+  border-radius: 50%;
+  opacity: 0;
+  animation: rippleOut 1.4s ease-out 1.55s forwards;
+}
+.intro-ripple-2 {
+  animation-delay: 1.75s;
+  border-color: var(--greyish-cyan);
+}
+@keyframes rippleOut {
+  0%   { width: 30px;  height: 12px; opacity: 0.55; }
+  100% { width: 240px; height: 60px; opacity: 0; }
+}
+
 .intro-text {
   font-family: 'Fraunces', serif;
   color: var(--super-white);
