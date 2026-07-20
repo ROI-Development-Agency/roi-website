@@ -1,0 +1,6 @@
+# Netlify configuration for ROI Development Agency
+# Tells Netlify where serverless functions live.
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Growth Diagnostic — ROI Development Agency</title>
+<meta name="description" content="Score your marketing in three minutes. Seven questions, one score out of 100, a custom report showing exactly what to fix first.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav id="nav">
+  <a href="index.html" class="nav-logo">
+    <img src="logo-dark.png" alt="ROI Development Agency">
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="blog.html">Blog</a></li>
+    <li><a href="diagnostic.html" class="active">Diagnostic</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="contact.html" class="nav-cta" data-cal-link="kennedy-matiasi/discovery" data-cal-config='{"theme":"light"}'>Book a Call</a>
+  <button class="mobile-menu-toggle" aria-label="Menu">≡</button>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="index.html">Home</a>
+  <a href="services.html">Services</a>
+  <a href="about.html">About</a>
+  <a href="blog.html">Blog</a>
+  <a href="diagnostic.html">Diagnostic</a>
+  <a href="contact.html">Contact</a>
+  <a href="contact.html" class="mobile-cta" data-cal-link="kennedy-matiasi/discovery" data-cal-config='{"theme":"light"}'>Book a Call →</a>
+</div>
+
+<!-- DIAGNOSTIC LANDING HERO -->
+<section class="diagnostic-hero" id="diagnostic-hero">
+  <div class="diagnostic-hero-overlay"></div>
+  <div class="diagnostic-hero-inner">
+    <div class="section-label light">The Growth Diagnostic</div>
+    <h1 class="diagnostic-hero-title">
+      Score your marketing<br>in <span class="italic">three minutes.</span>
+    </h1>
+    <p class="diagnostic-hero-sub">
+      Seven quick questions about how your marketing is set up today. You'll get a score out of 100 and a personalised breakdown of exactly what to fix first. No financial information required.
+    </p>
+    <button class="diagnostic-hero-cta" onclick="startDiagnostic()">
+      Start the Diagnostic <span>→</span>
+    </button>
+    <div class="diagnostic-hero-meta">Takes about 3 minutes · 7 questions</div>
+  </div>
+</section>
+
+<section class="diagnostic-page">
+  <div class="diagnostic-page-inner">
+
+    <!-- Question Steps (will be populated by JS) -->
+    <div class="diagnostic-step" id="question-container"></div>
+
+    <!-- Email Capture -->
+    <div class="diagnostic-step diagnostic-email-step" data-step="email">
+      <div class="diagnostic-progress">
+        <div class="diagnostic-progress-bar">
+          <div class="diagnostic-progress-fill" style="width:100%;"></div>
+        </div>
+        <div class="diagnostic-progress-text">Complete</div>
+      </div>
+      <div class="diagnostic-q-eyebrow">One last step</div>
+      <h2 class="diagnostic-q-title">See your <span style="font-style:italic;color:var(--dark-cyan);font-weight:300;">score.</span></h2>
+      <p class="diagnostic-q-sub">
+        Tell us who you are and we'll reveal your Growth Score and personalised breakdown right here.
+      </p>
+      <form class="diagnostic-form" onsubmit="submitDiagnostic(event)">
+        <input type="text" class="diagnostic-input" name="name" placeholder="Your name" required>
+        <input type="email" class="diagnostic-input" name="email" placeholder="Your email address" required>
+        <input type="text" class="diagnostic-input" name="company" placeholder="Company name (optional)">
+        <button type="submit" class="diagnostic-submit">
+          Reveal My Score <span>→</span>
+        </button>
+      </form>
+      <div style="font-size:12px;color:rgba(15,36,36,0.5);max-width:480px;margin:0 auto;">We'll only use this to follow up with relevant insights. No spam — unsubscribe anytime.</div>
+    </div>
+
+    <!-- Result Step -->
+    <div class="diagnostic-step diagnostic-result-step" data-step="result">
+      <div class="diagnostic-q-eyebrow">Your Growth Score</div>
+      <div class="diagnostic-score-display">
+        <span class="diagnostic-score-number" id="score-display">—</span>
+        <span class="diagnostic-score-total">/100</span>
+        <div class="diagnostic-tier" id="tier-display"></div>
+      </div>
+
+      <!-- Score spectrum bar -->
+      <div class="score-bar-wrap">
+        <div class="score-bar-track">
+          <div class="score-bar-fill" id="score-bar-fill" style="width:0;"></div>
+        </div>
+        <div class="score-tier-labels">
+          <span class="score-tier-label">Starting</span>
+          <span class="score-tier-label">Reactive</span>
+          <span class="score-tier-label">Foundational</span>
+          <span class="score-tier-label">Growing</span>
+          <span class="score-tier-label">Optimised</span>
+        </div>
+      </div>
+
+      <h2 class="diagnostic-q-title" id="result-headline" style="margin-top:48px;"></h2>
+      <p class="diagnostic-q-sub" id="result-sub">
+        Here's the breakdown behind your score — and where the biggest opportunities are.
+      </p>
+
+      <!-- Channel breakdown -->
+      <div class="report-section">
+        <div class="report-section-label">How each area scored</div>
+        <div class="report-bars" id="report-bars"></div>
+        <div class="report-legend">
+          <span><i class="dot strong"></i>Strong</span>
+          <span><i class="dot medium"></i>Needs work</span>
+          <span><i class="dot critical"></i>Critical gap</span>
+        </div>
+      </div>
+
+      <!-- Working vs costing -->
+      <div class="report-columns">
+        <div class="report-col working">
+          <div class="report-col-title">✓ What's working</div>
+          <ul id="report-working"></ul>
+        </div>
+        <div class="report-col costing">
+          <div class="report-col-title">! What's costing you</div>
+          <ul id="report-costing"></ul>
+        </div>
+      </div>
+
+      <!-- Single focus -->
+      <div class="report-focus">
+        <div class="report-focus-label">If you fix one thing first</div>
+        <div class="report-focus-area" id="report-focus-area"></div>
+        <p class="report-focus-note" id="report-focus-note"></p>
+      </div>
+
+      <p class="diagnostic-q-sub" style="margin-top:40px;">
+        Want to turn this into a plan? Book a free 30-minute call — we'll walk through your results and the fastest path forward. No pitch, just strategy.
+      </p>
+      <div style="display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:20px;">
+        <button class="btn-primary" data-cal-link="kennedy-matiasi/discovery" data-cal-config='{"theme":"light"}'>Book a Strategy Call <span>→</span></button>
+        <button class="btn-text" onclick="restartDiagnostic()">Take the test again</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-logo">
+        <img src="logo-white.png" alt="ROI Development Agency">
+        <div class="footer-brand-tag">Anchored In Results</div>
+        <p class="footer-brand-desc">A strategic marketing agency working with ambitious brands worldwide.</p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Services</div>
+        <ul>
+          <li><a href="services.html#strategy">Brand Strategy</a></li>
+          <li><a href="services.html#social">Social Media</a></li>
+          <li><a href="services.html#seo">Search & SEO</a></li>
+          <li><a href="services.html#email">Email Marketing</a></li>
+          <li><a href="services.html#ads">Paid Advertising</a></li>
+          <li><a href="services.html#web">Web Design</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Agency</div>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="diagnostic.html">Diagnostic</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Contact</div>
+        <ul>
+          <li><a href="mailto:info@roidevelopment.agency">info@roidevelopment.agency</a></li>
+          <li><a href="contact.html" data-cal-link="kennedy-matiasi/discovery" data-cal-config='{"theme":"light"}'>Book a Call</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 ROI Development Agency. All rights reserved.</div>
+      <div class="footer-socials">
+        <a href="https://instagram.com/roidevelopmentagency" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://linkedin.com/company/roidevelopmentagency" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://facebook.com/roidevelopmentagency" target="_blank" rel="noopener">Facebook</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+const questions = [
+  {
+    area: "Brand Positioning", max: 10,
+    eyebrow: "Question 01 of 07",
+    title: "How clear is your brand positioning?",
+    sub: "Can you state in one sentence what you do, who you do it for, and why you're different — and does your team agree?",
+    options: [
+      { text: "Crystal clear. Everyone on the team can recite it.", score: 10, note: "Your positioning is locked in — that clarity makes every other channel work harder." },
+      { text: "Mostly clear, but we're a bit inconsistent in how we say it.", score: 7, note: "The foundation is there, but inconsistent messaging dilutes recognition across channels." },
+      { text: "We have a rough idea but it's not documented.", score: 4, note: "Undocumented positioning means your team improvises — and the market hears a muddled message." },
+      { text: "Honestly, it's all over the place.", score: 1, note: "Without clear positioning, every ad, post and page is working against itself. This is the root issue." }
+    ]
+  },
+  {
+    area: "Social Media", max: 15,
+    eyebrow: "Question 02 of 07",
+    title: "How active is your social media presence?",
+    sub: "Across the platforms that matter for your audience — not all of them, just the right ones.",
+    options: [
+      { text: "Consistent posting, growing audience, regular engagement.", score: 15, note: "Your social is a genuine growth engine — consistency is paying off." },
+      { text: "We post regularly but growth has plateaued.", score: 10, note: "You're consistent, but a plateau usually means the strategy needs a refresh, not more posts." },
+      { text: "We post when we remember to. It's inconsistent.", score: 5, note: "Sporadic posting trains the algorithm to ignore you — consistency is the cheapest fix available." },
+      { text: "Barely active or completely dormant.", score: 1, note: "A dormant presence signals 'inactive business' to prospects checking you out. Quick win waiting here." }
+    ]
+  },
+  {
+    area: "SEO & Search", max: 15,
+    eyebrow: "Question 03 of 07",
+    title: "Are you doing SEO?",
+    sub: "Search visibility — keyword strategy, optimised pages, technical foundations, content built to rank.",
+    options: [
+      { text: "Yes — and we're ranking for keywords that drive real traffic.", score: 15, note: "You own search real estate — that's compounding free traffic most competitors never capture." },
+      { text: "We've done some, but no clear strategy or measurement.", score: 8, note: "Effort without strategy leaves rankings on the table. The pieces exist — they need direction." },
+      { text: "We know we should but we haven't started.", score: 3, note: "Every month without SEO is traffic going to competitors who started. This compounds against you." },
+      { text: "What's SEO?", score: 1, note: "You're invisible to people actively searching for what you sell — the highest-intent buyers there are." }
+    ]
+  },
+  {
+    area: "Email Marketing", max: 15,
+    eyebrow: "Question 04 of 07",
+    title: "How is your email marketing performing?",
+    sub: "Welcome flows, nurture sequences, campaigns. Email is the only channel you actually own.",
+    options: [
+      { text: "Full system: flows, campaigns, list growing, measurable revenue.", score: 15, note: "Email is doing real revenue work for you — the highest-ROI channel, fully leveraged." },
+      { text: "We send newsletters but no automated flows.", score: 8, note: "Newsletters are good, but no automated flows means you're hand-doing what should run on autopilot." },
+      { text: "We have a list but rarely email it.", score: 3, note: "A neglected list is money sitting idle. Re-engaging it is often the fastest revenue win available." },
+      { text: "We're not collecting emails or sending anything.", score: 1, note: "No email = no owned audience. Every visitor you don't capture is gone for good." }
+    ]
+  },
+  {
+    area: "Paid Advertising", max: 15,
+    eyebrow: "Question 05 of 07",
+    title: "Are you running paid ads?",
+    sub: "Meta, Google, LinkedIn, TikTok — strategic, measured, with creative that's actually tested.",
+    options: [
+      { text: "Yes, we know our cost per lead and ROAS by campaign.", score: 15, note: "You're running ads like an operator — measured, accountable, scalable." },
+      { text: "We run ads but we're not sure what's actually working.", score: 8, note: "Spending without clear attribution means you're likely funding losers alongside winners." },
+      { text: "We've tried ads but stopped because they didn't work.", score: 4, note: "Ads rarely fail outright — usually the targeting or creative was off. There's recoverable upside here." },
+      { text: "We haven't run ads.", score: 2, note: "Paid is optional, but it's the fastest lever to scale once the fundamentals are in place." }
+    ]
+  },
+  {
+    area: "Website Conversion", max: 15,
+    eyebrow: "Question 06 of 07",
+    title: "How does your website convert?",
+    sub: "When someone lands on your site, is it built to move them to the next step — or does it leak attention?",
+    options: [
+      { text: "Fast, clear, conversion-optimised. We track every step.", score: 15, note: "Your site is doing its job — turning attention into action and proving it with data." },
+      { text: "It looks fine but we don't really know how it converts.", score: 9, note: "'Looks fine' isn't 'converts well.' Without tracking, you can't tell where visitors drop off." },
+      { text: "It's dated and probably costing us leads.", score: 4, note: "A dated site quietly leaks the leads your other channels work hard to send it." },
+      { text: "We don't have a real website, or it's broken.", score: 1, note: "Your website is the one asset you fully control — and right now it's not earning its keep." }
+    ]
+  },
+  {
+    area: "Measurement", max: 15,
+    eyebrow: "Question 07 of 07",
+    title: "How do you measure marketing success?",
+    sub: "The final question. What does 'good marketing' mean in your business right now?",
+    options: [
+      { text: "Clear KPIs tied to revenue. We report against them monthly.", score: 15, note: "You measure what matters — that discipline is what separates growth from guesswork." },
+      { text: "We track some metrics but it's mostly vibes-based.", score: 8, note: "Partial tracking means partial decisions. Tying metrics to revenue changes everything." },
+      { text: "We look at follower count and likes mostly.", score: 4, note: "Vanity metrics feel good but don't pay bills. You're flying without the instruments that matter." },
+      { text: "We don't really measure it.", score: 1, note: "Without measurement, you can't tell what's working — so you can't double down or cut losses." }
+    ]
+  }
+];
+
+let currentQuestion = 0;
+let answers = [];
+let totalScore = 0;
+
+function scrollToDiagnostic() {
+  const target = document.querySelector('.diagnostic-page');
+  if (target) {
+    const navHeight = 90;
+    const y = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  }
+}
+
+function startDiagnostic() {
+  const hero = document.getElementById('diagnostic-hero');
+  if (hero) hero.style.display = 'none';
+  showQuestion(0);
+  scrollToDiagnostic();
+}
+
+function showQuestion(index) {
+  const container = document.getElementById('question-container');
+  const q = questions[index];
+  const progress = ((index) / questions.length) * 100;
+
+  container.innerHTML = `
+    <div class="diagnostic-progress">
+      <div class="diagnostic-progress-bar">
+        <div class="diagnostic-progress-fill" style="width:${progress}%;"></div>
+      </div>
+      <div class="diagnostic-progress-text">${index + 1} of ${questions.length}</div>
+    </div>
+    <div class="diagnostic-q-eyebrow">${q.eyebrow}</div>
+    <h2 class="diagnostic-q-title">${q.title}</h2>
+    <p class="diagnostic-q-sub">${q.sub}</p>
+    <div class="diagnostic-options">
+      ${q.options.map((opt, i) => `
+        <button class="diagnostic-option" data-score="${opt.score}" onclick="selectOption(this, ${i})">
+          <span class="diagnostic-option-num">${String.fromCharCode(65 + i)}</span>
+          <span class="diagnostic-option-text">${opt.text}</span>
+        </button>
+      `).join('')}
+    </div>
+    <div class="diagnostic-nav">
+      <button class="diagnostic-back" onclick="goBack()" ${index === 0 ? 'disabled' : ''}>← Back</button>
+      <button class="diagnostic-next" onclick="goNext()" id="next-btn" disabled>
+        ${index === questions.length - 1 ? 'See My Score' : 'Next'} <span>→</span>
+      </button>
+    </div>
+  `;
+  container.classList.add('active');
+}
+
+function selectOption(btn, optionIndex) {
+  const options = btn.parentElement.querySelectorAll('.diagnostic-option');
+  options.forEach(o => o.classList.remove('selected'));
+  btn.classList.add('selected');
+  answers[currentQuestion] = { score: parseInt(btn.dataset.score), optionIndex: optionIndex };
+  document.getElementById('next-btn').disabled = false;
+}
+
+function goNext() {
+  if (answers[currentQuestion] === undefined) return;
+  currentQuestion++;
+  if (currentQuestion < questions.length) {
+    showQuestion(currentQuestion);
+    scrollToDiagnostic();
+  } else {
+    document.getElementById('question-container').classList.remove('active');
+    document.querySelector('[data-step="email"]').classList.add('active');
+    scrollToDiagnostic();
+  }
+}
+
+function goBack() {
+  if (currentQuestion > 0) {
+    currentQuestion--;
+    showQuestion(currentQuestion);
+    // Restore previous selection
+    setTimeout(() => {
+      const opts = document.querySelectorAll('.diagnostic-option');
+      const prev = answers[currentQuestion];
+      if (prev && opts[prev.optionIndex]) {
+        opts[prev.optionIndex].classList.add('selected');
+        document.getElementById('next-btn').disabled = false;
+      }
+    }, 50);
+    scrollToDiagnostic();
+  }
+}
+
+function submitDiagnostic(e) {
+  e.preventDefault();
+  totalScore = answers.reduce((sum, a) => sum + (a ? a.score : 0), 0);
+
+  // Capture lead details (wire to Brevo / Netlify Forms when ready)
+  const form = e.target;
+  const lead = {
+    name: form.name.value,
+    email: form.email.value,
+    company: form.company.value,
+    score: totalScore,
+    answers: answers.map((a, i) => ({ area: questions[i].area, score: a.score, of: questions[i].max }))
+  };
+  // TODO: POST `lead` to your endpoint to capture it, e.g.
+  // fetch('/.netlify/functions/diagnostic', { method: 'POST', body: JSON.stringify(lead) });
+  console.log('Diagnostic lead:', lead);
+
+  // Determine tier
+  let tier = '', headline = '';
+  if (totalScore >= 80) {
+    tier = 'Optimised'; headline = 'You\'re running a strong machine.';
+  } else if (totalScore >= 60) {
+    tier = 'Growing'; headline = 'You have momentum — let\'s amplify it.';
+  } else if (totalScore >= 40) {
+    tier = 'Foundational'; headline = 'You have the basics — but you\'re leaving growth on the table.';
+  } else if (totalScore >= 20) {
+    tier = 'Reactive'; headline = 'Your marketing needs a strategic reset.';
+  } else {
+    tier = 'Starting'; headline = 'You\'re early — and that\'s actually an opportunity.';
+  }
+
+  document.querySelector('[data-step="email"]').classList.remove('active');
+  document.getElementById('score-display').textContent = totalScore;
+  document.getElementById('tier-display').textContent = tier;
+  document.getElementById('result-headline').textContent = headline;
+
+  renderReport();
+
+  document.querySelector('[data-step="result"]').classList.add('active');
+  scrollToDiagnostic();
+}
+
+const tiers = ['Starting','Reactive','Foundational','Growing','Optimised'];
+
+function renderReport() {
+  // Build per-area breakdown from answers
+  const breakdown = questions.map((q, i) => {
+    const a = answers[i] || { score: 0, optionIndex: 3 };
+    const pct = Math.round((a.score / q.max) * 100);
+    let level = 'critical';
+    if (pct >= 75) level = 'strong';
+    else if (pct >= 45) level = 'medium';
+    return {
+      area: q.area, score: a.score, max: q.max, pct, level,
+      note: q.options[a.optionIndex].note
+    };
+  });
+
+  // Tier marker position on the score bar (0-100)
+  document.getElementById('score-bar-fill').style.width = totalScore + '%';
+  let tierIdx = 0;
+  if (totalScore >= 80) tierIdx = 4;
+  else if (totalScore >= 60) tierIdx = 3;
+  else if (totalScore >= 40) tierIdx = 2;
+  else if (totalScore >= 20) tierIdx = 1;
+  document.querySelectorAll('.score-tier-label').forEach((el, i) => {
+    el.classList.toggle('current', i === tierIdx);
+  });
+
+  // Channel bars
+  document.getElementById('report-bars').innerHTML = breakdown.map(b => `
+    <div class="report-bar-row">
+      <div class="report-bar-head">
+        <span class="report-bar-area">${b.area}</span>
+        <span class="report-bar-score">${b.score}<span class="of">/${b.max}</span></span>
+      </div>
+      <div class="report-bar-track">
+        <div class="report-bar-fill ${b.level}" style="width:${b.pct}%;"></div>
+      </div>
+    </div>
+  `).join('');
+
+  // Working vs costing — honest split by level, mutually exclusive
+  const sorted = [...breakdown].sort((a, b) => b.pct - a.pct);
+  // Costing = genuinely weak areas (critical first, then medium), max 3
+  let costingFinal = sorted.filter(b => b.level === 'critical');
+  if (costingFinal.length < 2) {
+    costingFinal = costingFinal.concat(sorted.filter(b => b.level === 'medium').reverse());
+  }
+  costingFinal = costingFinal.slice(0, 3);
+  const costingAreas = new Set(costingFinal.map(b => b.area));
+  // Working = strongest areas not flagged as costing, max 2
+  const working = sorted.filter(b => !costingAreas.has(b.area)).slice(0, 2);
+
+  const workingCol = document.getElementById('report-working').closest('.report-col');
+  const costingCol = document.getElementById('report-costing').closest('.report-col');
+
+  if (working.length) {
+    document.getElementById('report-working').innerHTML = working.map(b => `
+      <li><span class="report-area-tag">${b.area}</span>${b.note}</li>
+    `).join('');
+    workingCol.style.display = '';
+  } else {
+    workingCol.style.display = 'none';
+  }
+
+  if (costingFinal.length) {
+    document.getElementById('report-costing').innerHTML = costingFinal.map(b => `
+      <li><span class="report-area-tag">${b.area}</span>${b.note}</li>
+    `).join('');
+    costingCol.style.display = '';
+  } else {
+    costingCol.style.display = 'none';
+  }
+
+  // Single focus = lowest scoring area; only show if it's not already strong
+  const focus = sorted[sorted.length - 1];
+  const focusBlock = document.querySelector('.report-focus');
+  if (focus.level !== 'strong') {
+    document.getElementById('report-focus-area').textContent = focus.area;
+    document.getElementById('report-focus-note').textContent = focus.note;
+    focusBlock.style.display = '';
+  } else {
+    focusBlock.style.display = 'none';
+  }
+}
+
+function restartDiagnostic() {
+  currentQuestion = 0;
+  answers = [];
+  totalScore = 0;
+  document.querySelector('[data-step="result"]').classList.remove('active');
+  const emailStep = document.querySelector('[data-step="email"]');
+  if (emailStep) emailStep.classList.remove('active');
+  const container = document.getElementById('question-container');
+  if (container) { container.classList.remove('active'); container.innerHTML = ''; }
+  const form = document.querySelector('.diagnostic-form');
+  if (form) form.reset();
+  const hero = document.getElementById('diagnostic-hero');
+  if (hero) hero.style.display = '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+<script src="cal-embed.js"></script>
+<script src="assistant.js"></script>
+</body>
+</html>

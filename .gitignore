@@ -1,0 +1,13 @@
+# Dependencies
+node_modules/
+
+# Netlify
+.netlify/
+
+# macOS
+.DS_Store
+
+# Logs / env
+*.log
+.env
+.env.*

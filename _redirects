@@ -1,0 +1,15 @@
+# Netlify redirects for clean URLs
+/services    /services.html    200
+/about       /about.html       200
+/diagnostic  /diagnostic.html  200
+/contact     /contact.html     200
+/blog        /blog.html        200
+
+# Blog posts — clean URLs
+/blog/audit-your-marketing            /blog-audit-your-marketing.html            200
+/blog/social-media-service-businesses /blog-social-media-service-businesses.html 200
+/blog/ai-in-marketing                 /blog-ai-in-marketing.html                 200
+
+# Old Work page redirects to homepage
+/work        /                 301
+/work.html   /                 301
