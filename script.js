@@ -3,7 +3,7 @@ const introEl = document.getElementById('intro');
 if (introEl) {
   setTimeout(() => {
     introEl.style.display = 'none';
-  }, 4600);
+  }, 3400);
   introEl.addEventListener('click', () => {
     introEl.style.display = 'none';
   });
