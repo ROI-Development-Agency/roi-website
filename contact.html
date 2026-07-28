@@ -41,17 +41,17 @@
 </div>
 
 <!-- PAGE HERO -->
-<section class="page-hero">
+<section class="page-hero page-hero-contact">
   <div class="page-hero-anchor">
     <img src="anchor-dark.svg" alt="">
   </div>
   <div class="page-hero-inner">
     <div class="section-label">Contact</div>
     <h1 class="page-hero-title">
-      Let's have a<br><span class="italic">real conversation.</span>
+      Let's have a <span class="italic">real conversation.</span>
     </h1>
     <p class="page-hero-sub">
-      Tell us what you're working on. We'll get back to you within one business day with next steps — or honest feedback if we're not the right fit.
+      Tell us what you're working on. We'll get back to you within one business day — or honest feedback if we're not the right fit.
     </p>
   </div>
 </section>
@@ -277,9 +277,9 @@ var CARE_NOTE = '';
   var hero = document.querySelector('.page-hero-inner');
   if (hero) {
     var banner = document.createElement('div');
-    banner.style.cssText = 'margin-top:26px;display:inline-flex;align-items:center;gap:12px;background:rgba(228,184,60,0.14);border:1px solid rgba(228,184,60,0.55);color:#F4F4F4;padding:12px 22px;border-radius:100px;font-size:15px;line-height:1.4;';
+    banner.style.cssText = 'margin-top:22px;display:flex;align-items:center;gap:12px;max-width:640px;background:#fbf1cf;border:1px solid #E4B83C;color:#1c2b2b;padding:14px 22px;border-radius:14px;font-size:15px;line-height:1.45;';
     var priceStr = p.price ? ' — <strong>' + p.price + '</strong>' : '';
-    banner.innerHTML = '<span style="color:#E4B83C;font-weight:700;">✓</span> You’re starting with <strong>' + p.label + '</strong>' + priceStr + '. Grab a time below or send the form — we’ll get you set up.';
+    banner.innerHTML = '<span style="color:#b8901f;font-weight:800;font-size:18px;line-height:1;">✓</span> <span>You’re starting with <strong style="color:#205050;">' + p.label + '</strong>' + priceStr + '. Grab a time below or send the form — we’ll get you set up.</span>';
     hero.appendChild(banner);
   }
 

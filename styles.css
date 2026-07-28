@@ -486,6 +486,10 @@ button.btn-text { background: none; border: none; }
   overflow: hidden;
 }
 
+/* Tighter hero on the contact page so the form/booking is visible sooner */
+.page-hero-contact { padding: 132px 60px 36px; }
+.page-hero-contact .page-hero-sub { margin-top: 20px; }
+
 .page-hero-anchor {
   position: absolute;
   right: -120px;
@@ -2276,7 +2280,7 @@ footer {
 
 /* ============= CONTACT PAGE ============= */
 .contact-section {
-  padding: 60px 60px 140px;
+  padding: 20px 60px 120px;
 }
 
 .contact-inner {
