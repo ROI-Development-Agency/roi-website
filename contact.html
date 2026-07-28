@@ -102,7 +102,9 @@
     </div>
 
     <!-- Contact Form -->
-    <form class="contact-form" id="contact-form" onsubmit="submitContact(event)">
+    <form class="contact-form" id="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="submitContact(event)">
+      <input type="hidden" name="form-name" value="contact">
+      <p style="display:none;"><label>Don&rsquo;t fill this out if you&rsquo;re human: <input name="bot-field"></label></p>
 
       <div class="contact-form-row">
         <div class="contact-field">
@@ -136,6 +138,11 @@
           <option value="email">Email Marketing</option>
           <option value="ads">Paid Advertising</option>
           <option value="web">Web Design & Build</option>
+          <optgroup label="Website Care & Management">
+            <option value="care-just-keep-it-running">Website Care — Just Keep It Running ($25/mo)</option>
+            <option value="care-running-updated">Website Care — Running + Updated ($50/mo)</option>
+            <option value="care-full-care">Website Care — Full Care ($100–150/mo)</option>
+          </optgroup>
           <option value="multiple">Multiple Services</option>
           <option value="unsure">Not Sure Yet</option>
         </select>
@@ -235,19 +242,75 @@
 
 <script src="script.js"></script>
 <script>
+// Real form submission via Netlify Forms (leads are captured + emailed)
 function submitContact(e) {
   e.preventDefault();
-  document.getElementById('contact-form').style.display = 'none';
-  document.getElementById('contact-success').classList.add('show');
-  window.scrollTo({ top: document.getElementById('contact-success').offsetTop - 100, behavior: 'smooth' });
+  var form = document.getElementById('contact-form');
+  var body = new URLSearchParams(new FormData(form)).toString();
+  fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body })
+    .then(function (res) {
+      if (!res.ok) throw new Error('bad status');
+      form.style.display = 'none';
+      var ok = document.getElementById('contact-success');
+      ok.classList.add('show');
+      window.scrollTo({ top: ok.offsetTop - 100, behavior: 'smooth' });
+    })
+    .catch(function () {
+      alert('Sorry — something went wrong sending your message. Please email us directly at info@roidevelopment.agency and we’ll respond right away.');
+    });
 }
+
+// Carry the chosen care plan through from the pricing page
+var CARE_PLANS = {
+  'just-keep-it-running': { label: 'Just Keep It Running', price: '$25/mo', sel: 'care-just-keep-it-running' },
+  'running-updated':      { label: 'Running + Updated',    price: '$50/mo', sel: 'care-running-updated' },
+  'full-care':           { label: 'Full Care',            price: '$100–150/mo', sel: 'care-full-care' },
+  'not-sure':            { label: 'a website care plan',  price: '', sel: '' }
+};
+var CARE_NOTE = '';
+(function () {
+  var plan = new URLSearchParams(location.search).get('plan');
+  var p = plan && CARE_PLANS[plan];
+  if (!p) return;
+
+  // 1) Confirmation banner in the hero so they know exactly where they are
+  var hero = document.querySelector('.page-hero-inner');
+  if (hero) {
+    var banner = document.createElement('div');
+    banner.style.cssText = 'margin-top:26px;display:inline-flex;align-items:center;gap:12px;background:rgba(228,184,60,0.14);border:1px solid rgba(228,184,60,0.55);color:#F4F4F4;padding:12px 22px;border-radius:100px;font-size:15px;line-height:1.4;';
+    var priceStr = p.price ? ' — <strong>' + p.price + '</strong>' : '';
+    banner.innerHTML = '<span style="color:#E4B83C;font-weight:700;">✓</span> You’re starting with <strong>' + p.label + '</strong>' + priceStr + '. Grab a time below or send the form — we’ll get you set up.';
+    hero.appendChild(banner);
+  }
+
+  // 2) Pre-select it in the dropdown
+  if (p.sel) {
+    var sel = document.getElementById('service');
+    if (sel) sel.value = p.sel;
+  }
+
+  // 3) Pre-fill the message so the box isn't blank
+  var msg = document.getElementById('message');
+  if (msg && !msg.value) {
+    msg.value = plan === 'not-sure'
+      ? 'I’d like help choosing the right website care plan for my site. '
+      : 'I’d like to get started with the ' + p.label + ' website care plan (' + p.price + '). ';
+  }
+
+  // 4) Carry the plan into the booking notes
+  CARE_NOTE = plan === 'not-sure'
+    ? 'Website Care — would like a recommendation on which plan'
+    : 'Website Care plan of interest: ' + p.label + ' (' + p.price + ')';
+})();
 </script>
 <script src="cal-embed.js"></script>
 <script>
 Cal("inline", {
   elementOrSelector: "#cal-inline-booking",
   calLink: "kennedy-matiasi/discovery",
-  config: { theme: "light", layout: "month_view" }
+  config: CARE_NOTE
+    ? { theme: "light", layout: "month_view", notes: CARE_NOTE }
+    : { theme: "light", layout: "month_view" }
 });
 </script>
 <script src="assistant.js"></script>
