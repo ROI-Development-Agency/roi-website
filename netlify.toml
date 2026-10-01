@@ -1,6 +1,17 @@
 # Netlify configuration for ROI Development Agency
-# Tells Netlify where serverless functions live.
 
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+
+# Keep non-production deploys (deploy previews + branch deploys) out of search
+# engines so only the canonical production site is indexed.
+[[context.deploy-preview.headers]]
+  for = "/*"
+  [context.deploy-preview.headers.values]
+    X-Robots-Tag = "noindex"
+
+[[context.branch-deploy.headers]]
+  for = "/*"
+  [context.branch-deploy.headers.values]
+    X-Robots-Tag = "noindex"

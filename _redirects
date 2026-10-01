@@ -1,3 +1,9 @@
+# Force the canonical domain — redirect the Netlify default subdomain (prod only)
+# so it can't be indexed as duplicate content. Preview/branch subdomains are
+# different hosts and are intentionally NOT matched here.
+https://wondrous-croissant-7e001e.netlify.app/*  https://roidevelopment.agency/:splat  301!
+http://wondrous-croissant-7e001e.netlify.app/*   https://roidevelopment.agency/:splat  301!
+
 # Netlify redirects for clean URLs
 /services    /services.html    200
 /about       /about.html       200
