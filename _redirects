@@ -12,6 +12,7 @@ http://wondrous-croissant-7e001e.netlify.app/*   https://roidevelopment.agency/:
 /blog        /blog.html        200
 /privacy     /privacy.html     200
 /website-care /website-care.html 200
+/work        /work.html        200
 
 # Blog posts — clean URLs
 /blog/audit-your-marketing            /blog-audit-your-marketing.html            200
@@ -21,7 +22,3 @@ http://wondrous-croissant-7e001e.netlify.app/*   https://roidevelopment.agency/:
 /blog/marketing-budget-framework      /blog-marketing-budget-framework.html      200
 /blog/email-marketing-flows           /blog-email-marketing-flows.html           200
 /blog/seo-vs-paid-ads                 /blog-seo-vs-paid-ads.html                 200
-
-# Old Work page redirects to homepage
-/work        /                 301
-/work.html   /                 301
