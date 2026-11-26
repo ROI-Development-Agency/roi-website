@@ -14,8 +14,8 @@
   var ENDPOINT = '/.netlify/functions/roy';
 
   // Opening message + a few starter chips (after this, it's all real AI)
-  var OPENING = "Hey, I'm <b>Roy</b> \u2014 your guide here at ROI \uD83D\uDC4B<br><br>Ask me anything about what we do, your marketing, or where to start. No pressure at all \u2014 what's on your mind?";
-  var STARTERS = ["What do you do?", "I need help growing", "How much does it cost?", "I'm just exploring"];
+  var OPENING = "Hey, I'm <b>Roy</b> \u2014 your guide here at ROI \uD83D\uDC4B<br><br>We help health &amp; wellness brands \u2014 studios, coaches, and communities \u2014 get found, trusted, and booked. Ask me anything, or tell me what you're working on.";
+  var STARTERS = ["What do you do?", "Help my studio get booked", "How much does it cost?", "I'm just exploring"];
 
   // conversation history sent to the model (role/content)
   var history = [];
@@ -86,6 +86,9 @@
   .roy-input button:disabled{opacity:.45;cursor:default;}
   .roy-input button svg{width:18px;height:18px;}
   .roy-foot{text-align:center;font-size:11px;color:rgba(22,56,56,.45);padding:0 0 11px;background:${CREAM};flex-shrink:0;letter-spacing:.02em;}
+  /* Don't cover the Book a Call CTA when the mobile menu is open */
+  #mobile-menu.open ~ #roy-launch, #mobile-menu.open ~ #roy-greet{display:none !important;}
+  @media (max-width:600px){ #roy-launch{bottom:16px;right:16px;} #roy-greet{bottom:116px;right:18px;} }
   `;
 
   function royBot(onLight) {
@@ -141,7 +144,7 @@
 
   var greet = document.createElement('div');
   greet.id = 'roy-greet';
-  greet.innerHTML = '<span class="x">&times;</span>Hi! I\'m Roy \uD83D\uDC4B Need a hand finding the right fit? Ask me anything.';
+  greet.innerHTML = '<span class="x">&times;</span>Hi! I\'m Roy \uD83D\uDC4B Marketing your wellness brand? Ask me anything.';
   document.body.appendChild(greet);
 
   var panel = document.createElement('div');
@@ -149,7 +152,7 @@
   panel.innerHTML =
     '<div class="roy-head">'+
       '<div class="av">'+royBot(false)+'</div>'+
-      '<div><div class="ttl">Roy</div><div class="sub"><span class="dot"></span>Your guide at ROI \u00b7 online</div></div>'+
+      '<div><div class="ttl">Roy</div><div class="sub"><span class="dot"></span>Wellness marketing guide \u00b7 online</div></div>'+
       '<button class="close" aria-label="Close">&times;</button>'+
     '</div>'+
     '<div class="roy-body" id="roy-body"></div>'+
@@ -275,13 +278,20 @@
   panel.querySelector('.close').onclick = closePanel;
   sendBtn.onclick = submit;
   input.addEventListener('keydown', function(e){ if(e.key==='Enter') submit(); });
+  // Esc closes Roy (panel or greeting)
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' || e.key === 'Esc'){
+      if(panel.classList.contains('open')) closePanel();
+      greet.classList.remove('show');
+    }
+  });
   greet.querySelector('.x').onclick = function(e){ e.stopPropagation(); greet.classList.remove('show'); };
   greet.onclick = openPanel;
 
   var nudges = [
     "Hey, let's chat \uD83D\uDC4B",
-    "Got a marketing question?",
-    "Want to see where your marketing stands?",
+    "Got a wellness marketing question?",
+    "Want more members and bookings?",
     "I can help \u2014 ask me anything \uD83D\uDE0A",
     "Curious what we do? Tap to chat."
   ];
